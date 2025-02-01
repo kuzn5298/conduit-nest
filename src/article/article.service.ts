@@ -182,10 +182,10 @@ export class ArticleService {
 
     this.articleCheck.isInFavorites(isFavorite);
 
-    await this.addArticleToFavorites(slug, currentUserId);
+    const newArticle = await this.addArticleToFavorites(slug, currentUserId);
 
     const articleComplete = await this.getArticleWithCompletdData(
-      article,
+      newArticle,
       currentUserId,
     );
 
@@ -201,10 +201,13 @@ export class ArticleService {
 
     this.articleCheck.isNotInFavorites(isFavorite);
 
-    await this.deleteArticleFromFavorites(slug, currentUserId);
+    const newArticle = await this.deleteArticleFromFavorites(
+      slug,
+      currentUserId,
+    );
 
     const articleComplete = await this.getArticleWithCompletdData(
-      article,
+      newArticle,
       currentUserId,
     );
 
@@ -278,15 +281,18 @@ export class ArticleService {
   private async addArticleToFavorites(
     slug: string,
     currentUserId: number,
-  ): Promise<void> {
-    await this.articleRepository.addArticleToFavorites(slug, currentUserId);
+  ): Promise<ArticleWithRelationEntity> {
+    return await this.articleRepository.addArticleToFavorites(
+      slug,
+      currentUserId,
+    );
   }
 
   private async deleteArticleFromFavorites(
     slug: string,
     currentUserId: number,
-  ): Promise<void> {
-    await this.articleRepository.removeArticleFromFavorites(
+  ): Promise<ArticleWithRelationEntity> {
+    return await this.articleRepository.removeArticleFromFavorites(
       slug,
       currentUserId,
     );
