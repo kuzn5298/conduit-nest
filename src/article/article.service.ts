@@ -22,6 +22,7 @@ import { CommentCreateDto } from '@app/comment/dto/commentCreate.dto';
 import { ResCommentDto } from '@app/comment/dto/resComment.dto';
 import { CommentService } from '@app/comment/comment.service';
 import { ResCommentListDto } from '@app/comment/dto/resCommentList.dto';
+import { FollowService } from '@app/follow/follow.service';
 
 @Injectable()
 export class ArticleService {
@@ -33,6 +34,7 @@ export class ArticleService {
     private readonly articleTransaction: ArticleTransaction,
     private readonly articleCheck: ArticleCheck,
     private readonly commentService: CommentService,
+    private readonly followService: FollowService,
   ) {}
 
   async getArticleAllByParamsAndToken(
@@ -351,9 +353,20 @@ export class ArticleService {
       article,
       currentUserId,
     );
+
+    const isFollowing = await this.followService.isFollowing(
+      currentUserId,
+      article.authorId,
+    );
+
+    const author = {
+      ...article.author,
+      following: isFollowing,
+    };
+
     const tagListNames = await this.articleToTagList(article.tagList);
 
-    return { ...articleWithFavorite, tagList: tagListNames };
+    return { ...articleWithFavorite, author, tagList: tagListNames };
   }
 
   private getArticleWithFavoritesData(

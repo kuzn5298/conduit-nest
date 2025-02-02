@@ -10,6 +10,7 @@ import { ArticleTransaction } from './article.transaction';
 import { ArticleCheck } from './article.check';
 import { TagModule } from '@app/tag/tag.module';
 import { CommentModule } from '@app/comment/comment.module';
+import { FollowModule } from '@app/follow/follow.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CommentModule } from '@app/comment/comment.module';
     ArticleToTagModule,
     TagModule,
     CommentModule,
+    FollowModule,
   ],
   controllers: [ArticleController],
   providers: [
