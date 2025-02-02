@@ -354,10 +354,9 @@ export class ArticleService {
       currentUserId,
     );
 
-    const isFollowing = await this.followService.isFollowing(
-      currentUserId,
-      article.authorId,
-    );
+    const isFollowing = currentUserId
+      ? await this.followService.isFollowing(currentUserId, article.authorId)
+      : false;
 
     const author = {
       ...article.author,
