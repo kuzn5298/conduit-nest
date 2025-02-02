@@ -17,11 +17,13 @@ async function execute<T extends Entity, K extends keyof T>(
   where: K,
 ) {
   for await (const item of list) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, ...rest } = item;
     const result = await prisma[entity].upsert({
       where: { [where]: item[where] },
       update: {},
       create: {
-        ...item,
+        ...rest,
       },
     });
 
