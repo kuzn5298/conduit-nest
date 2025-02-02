@@ -17,13 +17,18 @@ export class ProfileService {
     username: string,
     token: Token,
   ): Promise<ProfileBuildResponseDto> {
-    const userCurrent = await this.userService.getUserByToken(token);
-    await this.checkProfileByName(username);
+    let isFollowing = false;
     const user = await this.getProfileByName(username);
-    const isFollowing = await this.followService.isFollowing(
-      userCurrent.id,
-      user.id,
-    );
+
+    if (token) {
+      const userCurrent = await this.userService.getUserByToken(token);
+      await this.checkProfileByName(username);
+      isFollowing = await this.followService.isFollowing(
+        userCurrent.id,
+        user.id,
+      );
+    }
+
     return this.buildProfileResponse({ ...user, following: isFollowing });
   }
 
